@@ -1,0 +1,15 @@
+import pandas as pd
+
+# 1. CP949 인코딩으로 CSV 로드 (한글 깨짐 방지)
+df = pd.read_csv('population.csv', encoding='cp949')
+
+# 2. 숫자 데이터의 콤마 제거 및 정수형 변환
+for col in df.columns:
+    if df[col].dtype == object and col != '행정구역':
+        try:
+            df[col] = df[col].str.replace(',', '').astype(int)
+        except:
+            pass
+
+# 3. 데이터 확인
+print(df.head())
