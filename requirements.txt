@@ -5,3 +5,6 @@ numpy
 folium
 streamlit-folium
 pandas
+matplotli
+scikit-learn
+koreanize-matplotlib
