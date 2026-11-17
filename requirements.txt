@@ -4,3 +4,5 @@ numpy
 matplotlib
 scikit-learn
 koreanize-matplotlib
+folium
+streamlit-folium
