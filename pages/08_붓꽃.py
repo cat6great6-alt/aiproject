@@ -145,3 +145,19 @@ ax.grid(True, linestyle="--", alpha=0.4)
 ax.legend(loc="upper left", frameon=True)
 
 st.pyplot(fig)
+@st.cache_data
+def load_data():
+    file_name = "l1i2li121li2l1i.xlsx"
+    if os.path.exists(file_name):
+        try:
+            df = pd.read_excel(file_name, sheet_name="Iris", engine="openpyxl")
+            if "Unnamed: 0" in df.columns:
+                df = df.drop(columns=["Unnamed: 0"])
+            return df
+        except ImportError:
+            st.warning("`openpyxl` 패키지가 없어 기본 Iris 데이터셋으로 대체해 실행합니다.")
+
+    iris = load_iris()
+    df = pd.DataFrame(iris.data, columns=["꽃받침 길이", "꽃받침 너비", "꽃잎 길이", "꽃잎너비"])
+    df["품종"] = [f"Iris-{iris.target_names[i]}" for i in iris.target]
+    return df
