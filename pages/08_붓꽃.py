@@ -2,12 +2,26 @@ import os
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import koreanize_matplotlib  # Streamlit Cloud 리눅스 환경 한글 깨짐 방지
+import matplotlib.font_manager as fm
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.datasets import load_iris
 
-# 페이지 기본 설정
-st.set_page_config(page_title="붓꽃(Iris) 품종 예측기", page_icon="🌸", layout="centered")
+# 한글 폰트 설정 (Python 3.14 및 Streamlit Cloud 호환)
+def set_korean_font():
+    font_candidates = [
+        "/usr/share/fonts/truetype/nanum/NanumGothic.ttf",  # Streamlit Cloud (fonts-nanum)
+        "C:/Windows/Fonts/malgun.ttf",                      # Windows (맑은 고딕)
+        "/System/Library/Fonts/AppleGothic.ttf"             # macOS
+    ]
+    for path in font_candidates:
+        if os.path.exists(path):
+            fm.fontManager.addfont(path)
+            font_name = fm.FontProperties(fname=path).get_name()
+            plt.rc("font", family=font_name)
+            break
+    plt.rcParams["axes.unicode_minus"] = False
+
+set_korean_font()
 
 st.title("🌸 붓꽃(Iris) 품종 예측 및 위치 시각화")
 st.write("꽃잎 길이와 꽃잎 너비를 입력하면 **랜덤 포레스트(Random Forest)** 분류 모델이 품종을 예측하고, 전체 데이터 분포에서 입력값의 위치를 표시합니다.")
@@ -22,7 +36,6 @@ def load_data():
             df = df.drop(columns=["Unnamed: 0"])
         return df
     else:
-        # 파일이 없을 경우 동일 구조의 기본 Iris 데이터셋 로드
         iris = load_iris()
         df = pd.DataFrame(iris.data, columns=["꽃받침 길이", "꽃받침 너비", "꽃잎 길이", "꽃잎너비"])
         df["품종"] = [f"Iris-{iris.target_names[i]}" for i in iris.target]
@@ -83,7 +96,6 @@ classes = model.classes_
 st.subheader("2. 품종 예측 결과")
 st.success(f"예측된 품종은 **{prediction}** 입니다!")
 
-# 품종별 예측 확률 표시
 proba_df = pd.DataFrame({
     "품종": classes,
     "예측 확률 (%)": [round(p * 100, 1) for p in proba]
