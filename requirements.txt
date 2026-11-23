@@ -7,5 +7,4 @@ koreanize-matplotlib
 folium
 streamlit-folium
 fonts-nanum
-openpyxl
-scikit-learn
+openpyxl  
