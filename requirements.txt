@@ -6,3 +6,4 @@ scikit-learn
 koreanize-matplotlib
 folium
 streamlit-folium
+fonts-nanum
